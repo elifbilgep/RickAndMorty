@@ -11,7 +11,7 @@ struct TextConstant {
     static let appName = "Rick And Morty"
 }
 
-struct CellFile{// nib adı olarak deiş
+struct Nibs{// nib adı olarak deiş
     
     static let characterCell = "CharacterCell"
     static let seasonCell = "SeasonSectionCell"
