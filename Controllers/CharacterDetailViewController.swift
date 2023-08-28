@@ -6,13 +6,13 @@
 //
 
 import UIKit
-import Foundation
 
-class CharacterDetailViewController : UIViewController {
+final class CharacterDetailViewController : UIViewController {
     
-    @IBOutlet private weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     
-    var viewModel : CharacterDetailViewModel!
+        
+    private let viewModel : CharacterDetailViewModel
     
     private let spinner : UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -20,18 +20,36 @@ class CharacterDetailViewController : UIViewController {
         spinner.translatesAutoresizingMaskIntoConstraints = false
         return spinner
     }()
-
+    
+    init(viewModel : CharacterDetailViewModel){
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         spinner.translatesAutoresizingMaskIntoConstraints = false
         title = viewModel.title
+       
+        commonInitializer()
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         
         collectionView.register(UINib(nibName: CellFile.characterPhotoCell, bundle: Bundle(for: CharacterPhotoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterPhotoCollectionViewCell.cellIdentifer)
         collectionView.register(UINib(nibName: CellFile.characterInfoCell, bundle: Bundle(for: CharacterInfoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterInfoCollectionViewCell.cellIdentifier)
+
+    }
     
+    private func commonInitializer() {
+        
+        self.view.addSubview(collectionView)
+        collectionView.frame = self.view.bounds
+        collectionView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
     }
 }
 
@@ -82,6 +100,8 @@ extension CharacterDetailViewController : UICollectionViewDataSource, UICollecti
             return CGSize(width: width, height: width - 100 )
         }
     }
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         

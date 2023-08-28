@@ -11,11 +11,12 @@ class CharacterInfoCollectionViewCell: UICollectionViewCell {
 
     static let cellIdentifier = "CharacterInfoCollectionViewCell"
     
-    @IBOutlet private weak var titleView: UIView!
-    @IBOutlet private weak var title: UILabel!
-    @IBOutlet private weak var valueTitle: UILabel!
- 
 
+    @IBOutlet weak var valueTitle: UILabel!
+    
+    @IBOutlet weak var title: UILabel!
+    
+    @IBOutlet weak var titleView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

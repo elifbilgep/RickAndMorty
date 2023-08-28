@@ -19,11 +19,12 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     }
     //MARK: - Properties
     
-    @IBOutlet private weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     
-    var viewModel: CharacterListViewViewModel!//kaçın - 
     
-     private lazy var spinner: UIActivityIndicatorView = {
+    var viewModel: CharacterListViewViewModel!//kaçın -
+    
+    private lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
         spinner.translatesAutoresizingMaskIntoConstraints = false
@@ -34,9 +35,12 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
+
+        self.view.addSubview(collectionView)
+        collectionView.frame = self.view.bounds
         //nav fonskşyonu> configure ui() -> tüm view itemların işlemleri
         
+        //add navbar
         title = TextConstant.appName
         self.navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -58,11 +62,14 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     
     func configureCollectionView(){
         collectionView.register(UINib(nibName: CellFile.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
+        
         collectionView.register(UINib(nibName: CellFile.seasonCell, bundle: Bundle(for: SeasonSectionCell.self)), forCellWithReuseIdentifier: SeasonSectionCell.cellIdentifier)
+        
         collectionView.register(FooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterLoadingCollectionReusableView.identifier)
+        
         collectionView.register(UINib(nibName: CellFile.sectionHeaderCell, bundle: Bundle(for: SectionHeaderCollectionViewCell.self)), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionViewCell.cellIdentifier)
-            
-      
+        
+        
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -92,21 +99,14 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     }
     
     func didSelectCharacter(_ character: CharacterModel) {
-        performSegue(withIdentifier: Segue.characterDetailSegue, sender: character)
+        let viewModel = CharacterDetailViewModel(character: character)
+        let detailVC = CharacterDetailViewController(viewModel: viewModel)
+        print(viewModel.sections)
+        self.navigationController?.pushViewController(detailVC, animated: true)
+        
     }
-    //MARK: - Segue
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segue.characterDetailSegue {
-                if let character = sender as? CharacterModel {
-                    let viewModel = CharacterDetailViewModel(character: character)
-                    let destinationVC = segue.destination as! CharacterDetailViewController
-                    destinationVC.viewModel = viewModel
-                }
-            }
-        }
+    //MARK: - CollectionView
 }
-
-//MARK: - CollectionView
 
 extension CharacterViewController : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     

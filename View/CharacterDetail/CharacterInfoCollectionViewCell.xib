@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CharacterInfoCollectionViewCell" customModule="RickAndMorty" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CharacterInfoCollectionViewCell" id="gTV-IL-0wX" customClass="CharacterInfoCollectionViewCell" customModule="RickAndMorty" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="187" height="142"/>
@@ -45,14 +45,19 @@
                                             <constraint firstAttribute="bottom" secondItem="8JL-lI-5ro" secondAttribute="bottom" id="4Gv-tX-702"/>
                                             <constraint firstItem="8JL-lI-5ro" firstAttribute="centerY" secondItem="fRe-xD-D5R" secondAttribute="centerY" id="Hmo-Jj-9vT"/>
                                             <constraint firstItem="8JL-lI-5ro" firstAttribute="leading" secondItem="fRe-xD-D5R" secondAttribute="leading" id="UYa-X9-ejB"/>
+                                            <constraint firstItem="8JL-lI-5ro" firstAttribute="top" secondItem="fRe-xD-D5R" secondAttribute="top" id="a4z-bx-9wd"/>
+                                            <constraint firstItem="8JL-lI-5ro" firstAttribute="leading" secondItem="fRe-xD-D5R" secondAttribute="leading" id="dnl-MA-xUP"/>
                                             <constraint firstItem="8JL-lI-5ro" firstAttribute="top" secondItem="fRe-xD-D5R" secondAttribute="top" id="gye-qf-fPA"/>
+                                            <constraint firstAttribute="bottom" secondItem="8JL-lI-5ro" secondAttribute="bottom" id="pyh-eY-l59"/>
                                             <constraint firstItem="8JL-lI-5ro" firstAttribute="centerX" secondItem="fRe-xD-D5R" secondAttribute="centerX" id="qoI-mv-KOB"/>
+                                            <constraint firstAttribute="trailing" secondItem="8JL-lI-5ro" secondAttribute="trailing" id="r8r-8e-r7L"/>
                                             <constraint firstAttribute="trailing" secondItem="8JL-lI-5ro" secondAttribute="trailing" id="t9P-m0-FTP"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="fRe-xD-D5R" firstAttribute="top" secondItem="Ppb-Ib-BgL" secondAttribute="bottom" id="i7j-rY-UY5"/>
+                                    <constraint firstItem="fRe-xD-D5R" firstAttribute="top" secondItem="Ppb-Ib-BgL" secondAttribute="bottom" id="pPw-kq-uPT"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -75,9 +80,9 @@
             </constraints>
             <size key="customSize" width="187" height="142"/>
             <connections>
-                <outlet property="title" destination="8JL-lI-5ro" id="5nR-eg-jpT"/>
-                <outlet property="titleView" destination="fRe-xD-D5R" id="SZH-Z4-nxt"/>
-                <outlet property="valueTitle" destination="Ppb-Ib-BgL" id="ge8-hI-a7X"/>
+                <outlet property="title" destination="8JL-lI-5ro" id="Mfh-ug-gSa"/>
+                <outlet property="titleView" destination="fRe-xD-D5R" id="iEf-sY-mdN"/>
+                <outlet property="valueTitle" destination="Ppb-Ib-BgL" id="Yqc-5n-s61"/>
             </connections>
             <point key="canvasLocation" x="232.82442748091603" y="45.774647887323944"/>
         </collectionViewCell>
