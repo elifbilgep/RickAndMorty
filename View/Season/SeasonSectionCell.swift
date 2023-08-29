@@ -21,18 +21,22 @@ class SeasonSectionCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         viewModel = SeasonSectionViewModel()
-        // Initialization code
+        configureUI()
+    }
+    
+    private func configureUI(){
+        configureCollectionView()
+    }
+    
+    private func configureCollectionView(){
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
     
         
         collectionView.register(UINib(nibName: "SeasonCell", bundle: Bundle(for: SeasonCell.self)), forCellWithReuseIdentifier: SeasonCell.cellIdentifier)
-      
-        
     }
     
-  
 }
 
 

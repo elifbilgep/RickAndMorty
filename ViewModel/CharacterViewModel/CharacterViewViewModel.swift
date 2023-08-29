@@ -38,7 +38,7 @@ final class CharacterListViewViewModel : NSObject{
     
     
     //Fetch initial set of characters (20)
-    public func fetchCharacters(){
+    func fetchCharacters(){
         Service.shared.execute(.listCharactersRequests, expecting: GetAllCharactersResponse.self) { [weak self] result in
             switch result{
             case .success(let responseModel):
@@ -57,7 +57,7 @@ final class CharacterListViewViewModel : NSObject{
     }
     
     // Paginate if additional characters are needed
-    public func fetchAdditionalCharacters(url : URL){
+    func fetchAdditionalCharacters(url : URL){
         guard !isLoadingMoreCharacters else{
             return
         }
@@ -100,6 +100,22 @@ final class CharacterListViewViewModel : NSObject{
     
     var shouldShowLoadMoreIndicator: Bool {
         return apiInfo?.next != nil
+    }
+    
+    func setCollectionCellSize(collectionView : UICollectionView, isHeight : Bool) -> Double {
+        
+        let bounds = collectionView.bounds
+        let width: CGFloat
+        let screenWidth = UIScreen.main.bounds.width
+        
+        width = (bounds.width - 30) / 2.2
+        if isHeight{
+            return width * 2
+        }else{
+            return width
+        }
+        
+       
     }
 }
 

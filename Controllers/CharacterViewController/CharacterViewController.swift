@@ -21,8 +21,7 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    
-    var viewModel: CharacterListViewViewModel!//kaçın -
+    var viewModel: CharacterListViewViewModel!
     
     private lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -34,51 +33,50 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-
-        self.view.addSubview(collectionView)
-        collectionView.frame = self.view.bounds
-        //nav fonskşyonu> configure ui() -> tüm view itemların işlemleri
-        
-        //add navbar
-        title = TextConstant.appName
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        configureUI()
         
         viewModel = CharacterListViewViewModel()
-        view.addSubview(spinner)
-        
         viewModel.delegate = self
-        
-        initSpinner()
-        
-        configureCollectionView()
         viewModel.fetchCharacters()
         
     }
     
-    //conf nav bar ()
+    func configureUI(){
+        configureNavBar()
+        configureCollectionView()
+        view.addSubview(spinner)
+        view.addSubview(collectionView)
+        configureSpinner()
+        view.backgroundColor = .systemBackground
+        
+    }
     
-    //conf ui -> configures
+    
+    func configureNavBar(){
+        title = TextConstant.appName
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    func configureSpinner(){
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        spinner.startAnimating()
+    }
     
     func configureCollectionView(){
-        collectionView.register(UINib(nibName: CellFile.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
+        collectionView.frame = self.view.bounds
         
-        collectionView.register(UINib(nibName: CellFile.seasonCell, bundle: Bundle(for: SeasonSectionCell.self)), forCellWithReuseIdentifier: SeasonSectionCell.cellIdentifier)
+        collectionView.register(UINib(nibName: Nibs.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
+        
+        collectionView.register(UINib(nibName: Nibs.seasonCell, bundle: Bundle(for: SeasonSectionCell.self)), forCellWithReuseIdentifier: SeasonSectionCell.cellIdentifier)
         
         collectionView.register(FooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterLoadingCollectionReusableView.identifier)
         
-        collectionView.register(UINib(nibName: CellFile.sectionHeaderCell, bundle: Bundle(for: SectionHeaderCollectionViewCell.self)), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionViewCell.cellIdentifier)
+        collectionView.register(UINib(nibName: Nibs.sectionHeaderCell, bundle: Bundle(for: SectionHeaderCollectionViewCell.self)), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionViewCell.cellIdentifier)
         
         
         collectionView.dataSource = self
         collectionView.delegate = self
-    }
-    
-    
-    func initSpinner(){
-        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        spinner.startAnimating()
     }
     
     func didLoadInitialCharacters() {
@@ -133,19 +131,12 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         
-        let bounds = collectionView.bounds
-        let width: CGFloat
-        let screenWidth = UIScreen.main.bounds.width
-        
-        
-        width = (bounds.width - 30) / 2.2//view model a
-        
         if indexPath.section == 0 {
-            return CGSize(width: screenWidth,height: CellSize.characterCellHeight)
+            return CGSize(width: UIScreen.main.bounds.width,height: CellSize.characterCellHeight)
         }else{
             return CGSize(//Viewmodel a taşı
-                width: width,
-                height: width * 1.5
+                width: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: false),
+                height: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: true)
             )
         }
     }
@@ -161,7 +152,6 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SeasonSectionCell.cellIdentifier, for: indexPath) as! SeasonSectionCell
-            // Configure your season section cell here
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CharacterColletionViewCell.cellIdentifier, for: indexPath) as! CharacterColletionViewCell
@@ -180,7 +170,7 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
             if indexPath.section == 0{
                 headerView.configure(title: Sections.Seasons.rawValue)
             }else{
-                headerView.configure(title:  Sections.Seasons.rawValue)
+                headerView.configure(title:  Sections.Characters.rawValue)
             }
             return headerView
         }

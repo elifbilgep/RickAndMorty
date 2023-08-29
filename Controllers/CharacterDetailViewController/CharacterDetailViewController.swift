@@ -9,8 +9,7 @@ import UIKit
 
 final class CharacterDetailViewController : UIViewController {
     
-    @IBOutlet weak var collectionView: UICollectionView!
-    
+    @IBOutlet private weak var collectionView: UICollectionView!
         
     private let viewModel : CharacterDetailViewModel
     
@@ -32,21 +31,34 @@ final class CharacterDetailViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        title = viewModel.title
-       
-        commonInitializer()
+        configureUI()
+    }
+    
+    private func configureUI(){
         
+        configureCollectionView()
+        initializeCollectionView()
+        configureSpinner()
+        configureTabBar()
+    }
+    
+    private func configureTabBar(){
+        title = viewModel.title
+    }
+
+    private func configureSpinner(){
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func configureCollectionView(){
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        collectionView.register(UINib(nibName: CellFile.characterPhotoCell, bundle: Bundle(for: CharacterPhotoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterPhotoCollectionViewCell.cellIdentifer)
-        collectionView.register(UINib(nibName: CellFile.characterInfoCell, bundle: Bundle(for: CharacterInfoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterInfoCollectionViewCell.cellIdentifier)
-
+        collectionView.register(UINib(nibName: Nibs.characterPhotoCell, bundle: Bundle(for: CharacterPhotoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterPhotoCollectionViewCell.cellIdentifer)
+        collectionView.register(UINib(nibName: Nibs.characterInfoCell, bundle: Bundle(for: CharacterInfoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterInfoCollectionViewCell.cellIdentifier)
     }
     
-    private func commonInitializer() {
-        
+    private func initializeCollectionView() {
         self.view.addSubview(collectionView)
         collectionView.frame = self.view.bounds
         collectionView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
@@ -95,7 +107,7 @@ extension CharacterDetailViewController : UICollectionViewDataSource, UICollecti
         let sectionType = viewModel.sections[indexPath.section]
         switch sectionType {
         case .information :
-            return CGSize(width: width / 2.5, height: 100)
+            return CGSize(width: width / 2.5, height: 100)// TO VİEWMODEL
         case .photo :
             return CGSize(width: width, height: width - 100 )
         }
