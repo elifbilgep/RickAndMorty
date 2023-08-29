@@ -131,19 +131,12 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         
-        let bounds = collectionView.bounds
-        let width: CGFloat
-        let screenWidth = UIScreen.main.bounds.width
-        
-        
-        width = (bounds.width - 30) / 2.2
-        
         if indexPath.section == 0 {
-            return CGSize(width: screenWidth,height: CellSize.characterCellHeight)
+            return CGSize(width: UIScreen.main.bounds.width,height: CellSize.characterCellHeight)
         }else{
             return CGSize(//Viewmodel a taşı
-                width: width,
-                height: width * 1.5
+                width: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: false),
+                height: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: true)
             )
         }
     }
