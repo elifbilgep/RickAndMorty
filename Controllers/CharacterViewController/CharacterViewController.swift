@@ -136,7 +136,7 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
         let screenWidth = UIScreen.main.bounds.width
         
         
-        width = (bounds.width - 30) / 2.2//view model a
+        width = (bounds.width - 30) / 2.2
         
         if indexPath.section == 0 {
             return CGSize(width: screenWidth,height: CellSize.characterCellHeight)
