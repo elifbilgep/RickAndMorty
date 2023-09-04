@@ -54,7 +54,7 @@ final class CharacterDetailViewController : UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        collectionView.register(UINib(nibName: Nibs.characterPhotoCell, bundle: Bundle(for: CharacterPhotoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterPhotoCollectionViewCell.cellIdentifer)
+        collectionView.register(UINib(nibName: Nibs.characterPhotoCell, bundle: Bundle(for: CharacterPhotoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterPhotoCollectionViewCell.cellIdentifier)
         collectionView.register(UINib(nibName: Nibs.characterInfoCell, bundle: Bundle(for: CharacterInfoCollectionViewCell.self)), forCellWithReuseIdentifier: CharacterInfoCollectionViewCell.cellIdentifier)
     }
     
@@ -88,7 +88,7 @@ extension CharacterDetailViewController : UICollectionViewDataSource, UICollecti
         
         switch sectionType{
         case .photo(let viewModel):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CharacterPhotoCollectionViewCell.cellIdentifer, for: indexPath) as? CharacterPhotoCollectionViewCell else{
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CharacterPhotoCollectionViewCell.cellIdentifier, for: indexPath) as? CharacterPhotoCollectionViewCell else{
                 fatalError()
             }
             cell.configure(with: viewModel)
@@ -103,7 +103,7 @@ extension CharacterDetailViewController : UICollectionViewDataSource, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = UIScreen.main.bounds.width
+        let width = UIScreen.screenWidth
         let sectionType = viewModel.sections[indexPath.section]
         switch sectionType {
         case .information :

@@ -54,7 +54,7 @@ extension SeasonSectionCell : UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let screenWidth = UIScreen.main.bounds.width
+        let screenWidth = UIScreen.screenWidth
         let cellWidth = screenWidth / 3.5
         
         return CGSize(width: cellWidth, height: CellSize.cellHeight ) // You can adjust the height as needed

@@ -143,7 +143,7 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
         
         
         if indexPath.section == 0 {
-            return CGSize(width: UIScreen.main.bounds.width,height: CellSize.characterCellHeight)
+            return CGSize(width: UIScreen.screenWidth,height: CellSize.characterCellHeight)
         }else{
             return CGSize(//Viewmodel a taşı
                 width: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: false),

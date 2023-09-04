@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ImageLoader{
+final class ImageLoader {
     
     static let shared = ImageLoader()
     

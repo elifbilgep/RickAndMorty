@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CharacterColletionViewCell : UICollectionViewCell {
+final class CharacterColletionViewCell : UICollectionViewCell, BaseCollectionViewCellProtocol {
     
     @IBOutlet private weak var characterImageView: UIImageView!
     @IBOutlet private weak var characterNameView: UILabel!
@@ -24,10 +24,7 @@ final class CharacterColletionViewCell : UICollectionViewCell {
         
         characterNameView.textColor = .label
         characterNameView.font = .systemFont(ofSize: 16,weight: .regular)
-        
-        
 
-    
         setupLayer()
     }
     
@@ -51,18 +48,19 @@ final class CharacterColletionViewCell : UICollectionViewCell {
         characterNameView.text = nil
     }
     
-    public func configure(with viewModel: CharacterCollectionViewCellViewModel){
-        characterNameView.text = viewModel.characterName
-        viewModel.fetchImage { [weak self] result in
-            switch result{
-            case .success(let data):
-                DispatchQueue.main.async {
-                    let image = UIImage(data: data)
-                    self?.characterImageView.image = image
+    func configure(with viewModel: Any?) {
+        if let viewModel = viewModel as? CharacterCollectionViewCellViewModel {
+            viewModel.fetchImage { [weak self] result in
+                switch result{
+                case .success(let data):
+                    DispatchQueue.main.async {
+                        let image = UIImage(data: data)
+                        self?.characterImageView.image = image
+                    }
+                case .failure(let error):
+                    print(String(describing: error))
+                    break
                 }
-            case .failure(let error):
-                print(String(describing: error))
-                break
             }
         }
     }
