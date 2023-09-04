@@ -25,37 +25,9 @@ final class SearchViewController: UIViewController, BaseViewControllerProtocol {
     private var collectionViewCellViewModels: [any Hashable] = []
     
     
-    struct Config{
-        enum ConfigType {
-            case character
-            case episode
-            case location
-            
-            var endpoint : Endpoint{
-                switch self {
-                case .character : return .character
-                case .episode : return .episode
-                case .location : return .location
-                }
-            }
-            
-            var title: String {
-                switch self{
-                case .character:
-                    return "Search Characters"
-                case .location:
-                    return "Search Location"
-                case .episode:
-                    return "Search Episode"
-                }
-            }
-        }
-        
-        let type : ConfigType
-    }
-    
-    
     //MARK: - init
+    //config -> type of the search
+    //character, episode, location
     init(config: Config){
         let viewModel = SearchViewViewModel(config: config)
         self.viewModel = viewModel
@@ -71,6 +43,10 @@ final class SearchViewController: UIViewController, BaseViewControllerProtocol {
         super.viewDidLoad()
         configureSearchBar()
         configureHandlers(viewModel: viewModel)
+        configureNavBar()
+    }
+    
+    private func configureNavBar(){
         setNavbar(title: viewModel.config.type.title)
         self.navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -79,8 +55,44 @@ final class SearchViewController: UIViewController, BaseViewControllerProtocol {
         searchBarView.delegate = self
     }
     
-    // Callbacks
-    private func configureHandlers(viewModel : SearchViewViewModel){
+    @IBAction private func searchPressed(_ sender: Any) {
+        executeSearch()
+    }
+
+    
+    func configureCollectionView(){
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.register(UINib(nibName: Nibs.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
+        collectionView.reloadData()
+    }
+    
+}
+
+//MARK: - Protocols
+extension SearchViewController : SearchViewControllerProtocol{
+    
+    func executeSearch() {
+        viewModel.executeSearch()
+    }
+    
+    func processViewModel() {
+        guard let resultsViewModel = resultsViewModel else {
+            return
+        }
+        
+        switch resultsViewModel.results {
+        case .characters(let viewModels):
+            self.collectionViewCellViewModels = viewModels
+            configureCollectionView()
+        //other cases can be implemented like:
+        //case .location(let viewModels):
+        //case .episode(let viewModels):
+        }
+    }
+    
+    func configureHandlers(viewModel : SearchViewViewModel){
         viewModel.registerSearchResultHandler { [weak self] result in
             DispatchQueue.main.async {
                 self?.resultsViewModel = result
@@ -94,6 +106,10 @@ final class SearchViewController: UIViewController, BaseViewControllerProtocol {
         }
     }
     
+    func noResultSearch() {
+        showNoResultsAlert()
+    }
+    
     //MARK: - No result Alert
     func showNoResultsAlert() {
         let alertController = UIAlertController(title: "No Results Found", message: nil, preferredStyle: .alert)
@@ -103,35 +119,10 @@ final class SearchViewController: UIViewController, BaseViewControllerProtocol {
         alertController.addAction(okAction)
         present(alertController, animated: true, completion: nil)
     }
-
-    //MARK: - Search Pressed Function
-    @IBAction func searchPressed(_ sender: Any) {
-        viewModel.executeSearch()
-    }
-    
-    private func processViewModel() {
-        guard let resultsViewModel = resultsViewModel else {
-            return
-        }
-        
-        switch resultsViewModel.results {
-        case .characters(let viewModels):
-            self.collectionViewCellViewModels = viewModels
-            setUpCollectionView()
-            //other cases can be implemented
-        }
-    }
-    
-    func setUpCollectionView(){
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
-        collectionView.register(UINib(nibName: Nibs.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
-        collectionView.reloadData()
-    }
 }
 
 
+//MARK: - Search Bar
 extension SearchViewController : UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.set(query: searchText)
@@ -168,7 +159,13 @@ extension SearchViewController : UICollectionViewDelegate, UICollectionViewDataS
         return CGSize(
             width: width, height: width * 1.5
         )
-        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedCharacter = viewModel.characterSeachResult(at: indexPath.row)
+        let viewModel = CharacterDetailViewModel(character: selectedCharacter!)
+        let detailVC = CharacterDetailViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
     
     
@@ -176,3 +173,4 @@ extension SearchViewController : UICollectionViewDelegate, UICollectionViewDataS
         return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 }
+

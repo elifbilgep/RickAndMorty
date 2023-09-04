@@ -60,7 +60,7 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     }
     
     @objc private func didTapSearch(){
-        let vc = SearchViewController(config: SearchViewController.Config(type: .character))
+        let vc = SearchViewController(config: Config(type: .character))
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -97,7 +97,7 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     }
     
     func didLoadMoreCharacters(with newIndexPaths: [IndexPath]) {
-        let sectionNumber = 1 // Specify the section number where you want to insert items
+        let sectionNumber = 1 
         let newIndexPathsInSection = newIndexPaths.map { indexPath in
             return IndexPath(row: indexPath.row, section: sectionNumber)
         }
@@ -107,13 +107,11 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     func didSelectCharacter(_ character: CharacterModel) {
         let viewModel = CharacterDetailViewModel(character: character)
         let detailVC = CharacterDetailViewController(viewModel: viewModel)
-        print(viewModel.sections)
         self.navigationController?.pushViewController(detailVC, animated: true)
-        
     }
-    //MARK: - CollectionView
 }
 
+//MARK: - CollectionView
 extension CharacterViewController : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -152,7 +150,11 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
     //MARK: - Inset for section at
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
 
-        return UIEdgeInsets(top: section == 0 ? .zero : MarginConstant.insetMeduim, left: MarginConstant.insetSmall, bottom: MarginConstant.insetSmall, right: MarginConstant.insetSmall)
+        if section == 0 {
+            return UIEdgeInsets(top: .zero, left: MarginConstant.insetSmall, bottom: MarginConstant.insetSmall, right: MarginConstant.insetSmall)
+        }
+        
+        return UIEdgeInsets(top: 10 , left: 10, bottom: 10, right: 10)
     }
     
     //MARK: - Cell for item at

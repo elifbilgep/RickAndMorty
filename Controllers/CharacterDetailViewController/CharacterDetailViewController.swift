@@ -49,7 +49,7 @@ final class CharacterDetailViewController : UIViewController, BaseViewController
         spinner.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private func configureCollectionView(){
+    func configureCollectionView(){
         collectionView.delegate = self
         collectionView.dataSource = self
         

@@ -38,7 +38,7 @@
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain" title="Search"/>
                             <connections>
-                                <action selector="searchPressed:" destination="-1" eventType="touchUpInside" id="O31-BC-v6B"/>
+                                <action selector="searchPressed:" destination="-1" eventType="touchUpInside" id="q1A-UH-qHM"/>
                             </connections>
                         </button>
                     </subviews>

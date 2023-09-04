@@ -29,7 +29,6 @@ final class Service {
     ///  - request: Request instance
     ///  - type: The type of object we expect to get back
     ///  - completion: Callback with data or error
-    
     func execute<T: Codable>(
         _ request: Request,
         expecting type: T.Type,

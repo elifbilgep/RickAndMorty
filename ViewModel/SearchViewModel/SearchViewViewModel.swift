@@ -7,21 +7,16 @@
 
 import Foundation
 
-final class SearchViewViewModel {
-    
-    let config : SearchViewController.Config
-    
-    private var searchText = ""
-    
-    private var searchResultHandler : ((SearchResultViewModel)-> Void)?
-    
-    private var noResultsHandler : (()-> Void)?
-    
-    private var searchResultModel : Codable?
+final class SearchViewViewModel : SearchViewModelProtocol {
+    let config : Config
+    var searchText = ""
+    var searchResultHandler : ((SearchResultViewModel)-> Void)?
+    var noResultsHandler : (()-> Void)?
+    var searchResultModel : Codable?
     
     //MARK: - init
     
-    init(config: SearchViewController.Config){
+    init(config: Config){
         self.config = config
     }
     
@@ -65,13 +60,11 @@ final class SearchViewViewModel {
         }
     }
     
-     private func makeSearchAPICall<T : Codable>(_ type: T.Type, request: Request){
+    func makeSearchAPICall<T : Codable>(_ type: T.Type, request: Request){
         Service.shared.execute(request, expecting: type) { [weak self] result in
-            //notify view of results no results or error
-            
             switch result {
             case .success(let model):
-                self?.processSearchResults(model: model)
+                self?.parseSearchResults(model: model)
             case .failure:
                 self?.handleNoResults()
                 break
@@ -79,15 +72,15 @@ final class SearchViewViewModel {
         }
     }
     
-    private func processSearchResults(model : Codable){
+    func parseSearchResults(model : Codable){
         var resultsVM : SearchResultType?
         var nextURL : String?
         
         if let characterResults = model as? GetAllCharactersResponse {
             resultsVM = .characters(characterResults.results.compactMap({
-                print($0.name)
                 return CharacterCollectionViewCellViewModel(characterName: $0.name, characterStatus:  $0.status, characterImageUrl:  URL(string:  $0.image))
             }))
+            //pagination
             nextURL = characterResults.info.next
         }
         if let results = resultsVM{
@@ -99,7 +92,7 @@ final class SearchViewViewModel {
         }
     }
     
-    private func handleNoResults(){
+    func handleNoResults(){
         noResultsHandler?()
     }
     
@@ -107,6 +100,7 @@ final class SearchViewViewModel {
         self.searchText = text
     }
     
+    //did tap
     func characterSeachResult(at index: Int)-> CharacterModel?{
         guard let searchModel = searchResultModel as? GetAllCharactersResponse else{
             return nil

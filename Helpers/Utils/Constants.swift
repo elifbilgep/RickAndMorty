@@ -31,3 +31,32 @@ struct MarginConstant{
     static let insetSmall : CGFloat = 10.0
 
 }
+
+struct Config{
+    enum ConfigType {
+        case character
+        case episode
+        case location
+        
+        var endpoint : Endpoint{
+            switch self {
+            case .character : return .character
+            case .episode : return .episode
+            case .location : return .location
+            }
+        }
+        
+        var title: String {
+            switch self{
+            case .character:
+                return "Search Characters"
+            case .location:
+                return "Search Location"
+            case .episode:
+                return "Search Episode"
+            }
+        }
+    }
+    
+    let type : ConfigType
+}

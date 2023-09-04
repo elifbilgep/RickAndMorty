@@ -107,9 +107,9 @@ final class CharacterListViewViewModel : NSObject{
         let bounds = collectionView.bounds
         let width: CGFloat
         
-        width = (bounds.width - 30) / 2.2
+        width = (bounds.width - 30) / 2.1
         if isHeight{
-            return width * 2
+            return width * 1.5
         }else{
             return width
         }
