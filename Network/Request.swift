@@ -46,19 +46,19 @@ final class Request{
     }
     
     //Computed + constructed API url
-    public var url : URL?{
+    var url : URL?{
         return URL(string: urlString)
     }
     
     //Desired http method
-    public let httpMethod = "GET"
+    let httpMethod = "GET"
    
     ///Construct request
     /// Parameters:
     ///     - Endpoint : Target endpoint
     ///     pathComponents: Collection of path components
     ///     queryparameters: Collection of query parameters
-    public init(
+    init(
         endpoint: Endpoint,
         pathComponents: [String] = [],
         queryParameters: [URLQueryItem] = []

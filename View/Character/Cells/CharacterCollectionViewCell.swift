@@ -24,7 +24,7 @@ final class CharacterColletionViewCell : UICollectionViewCell, BaseCollectionVie
         
         characterNameView.textColor = .label
         characterNameView.font = .systemFont(ofSize: 16,weight: .regular)
-
+        
         setupLayer()
     }
     
@@ -50,6 +50,7 @@ final class CharacterColletionViewCell : UICollectionViewCell, BaseCollectionVie
     
     func configure(with viewModel: Any?) {
         if let viewModel = viewModel as? CharacterCollectionViewCellViewModel {
+            characterNameView.text = viewModel.characterName
             viewModel.fetchImage { [weak self] result in
                 switch result{
                 case .success(let data):

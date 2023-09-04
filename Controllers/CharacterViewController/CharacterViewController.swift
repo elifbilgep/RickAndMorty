@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CharacterViewController: UIViewController,CharacterListViewViewModelDelegate {
+final class CharacterViewController: UIViewController,CharacterListViewViewModelDelegate, BaseViewControllerProtocol {
     
     private enum Sections : String{
         case Seasons, Characters
@@ -47,13 +47,10 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
         view.addSubview(spinner)
         view.addSubview(collectionView)
         configureSpinner()
-        view.backgroundColor = .systemBackground
-        
     }
     
-    
     func configureNavBar(){
-        title = TextConstant.appName
+        setNavbar(title: TextConstant.appName)
         self.navigationController?.navigationBar.prefersLargeTitles = true
         configureSearch()
     }
@@ -154,9 +151,8 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
     
     //MARK: - Inset for section at
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        
-        
-        return UIEdgeInsets(top: MarginConstant.inset, left: MarginConstant.inset, bottom: MarginConstant.inset, right: MarginConstant.inset)
+
+        return UIEdgeInsets(top: section == 0 ? .zero : MarginConstant.insetMeduim, left: MarginConstant.insetSmall, bottom: MarginConstant.insetSmall, right: MarginConstant.insetSmall)
     }
     
     //MARK: - Cell for item at

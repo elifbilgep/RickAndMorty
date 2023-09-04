@@ -38,7 +38,7 @@ final class FooterLoadingCollectionReusableView : UICollectionReusableView{
         ])
     }
     
-    public func startAnimating() {
+    func startAnimating() {
         spinner.startAnimating()
     }
 }

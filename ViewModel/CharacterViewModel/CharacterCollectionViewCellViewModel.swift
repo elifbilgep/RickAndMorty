@@ -9,7 +9,7 @@ import Foundation
 
 final class CharacterCollectionViewCellViewModel : Hashable, Equatable {
     
-    public let characterName : String
+    let characterName : String
     private let characterStatus : CharacterStatusModel
     private let characterImageUrl : URL?
     
@@ -23,11 +23,11 @@ final class CharacterCollectionViewCellViewModel : Hashable, Equatable {
         self.characterImageUrl = characterImageUrl
     }
     
-    public var characterStatusText : String{
+    var characterStatusText : String{
         return "Status: \(characterStatus.text)"
     }
     
-    public func fetchImage(completion: @escaping (Result<Data,Error>)-> Void){
+    func fetchImage(completion: @escaping (Result<Data,Error>)-> Void){
         guard let url = characterImageUrl else {
             completion(.failure(URLError(.badURL)))
             return

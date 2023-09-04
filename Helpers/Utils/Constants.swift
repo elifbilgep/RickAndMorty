@@ -26,6 +26,8 @@ struct Segue{
 }
 
 struct MarginConstant{
-    static let inset: CGFloat = 15.0
-    static let negativeInset: CGFloat = -15.0
+    static let insetLarge: CGFloat = 20.0
+    static let insetMeduim : CGFloat = 15.0
+    static let insetSmall : CGFloat = 10.0
+
 }

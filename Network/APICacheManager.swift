@@ -27,7 +27,7 @@ final class APICacheManager{
     ///url:  url key
     ///returns -> Nullable Data
     
-    public func cachedResponse(for endpoint : Endpoint, url: URL? ) -> Data? {
+    func cachedResponse(for endpoint : Endpoint, url: URL? ) -> Data? {
         guard let targetCache = cacheDictionary[endpoint], let url = url else{
             return nil
         }
@@ -41,7 +41,7 @@ final class APICacheManager{
     ///  - endpoint: Endpoint to cache for
     ///  - url: Url string
     ///  - data: Data to set in cache
-    public func setCache(for endpoint : Endpoint, url: URL?, data : Data){
+    func setCache(for endpoint : Endpoint, url: URL?, data : Data){
         guard let targetCache = cacheDictionary[endpoint], let url = url else{
             return
         }

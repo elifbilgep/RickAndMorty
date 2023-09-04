@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController, BaseViewControllerProtocol {
     //MARK: - Outlets
     @IBOutlet weak var searchBarView: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -69,16 +69,17 @@ final class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
         configureSearchBar()
         configureHandlers(viewModel: viewModel)
-        
+        setNavbar(title: viewModel.config.type.title)
+        self.navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     private func configureSearchBar(){
         searchBarView.delegate = self
     }
     
+    // Callbacks
     private func configureHandlers(viewModel : SearchViewViewModel){
         viewModel.registerSearchResultHandler { [weak self] result in
             DispatchQueue.main.async {
@@ -87,12 +88,13 @@ final class SearchViewController: UIViewController {
         }
         
         viewModel.registerNoResultHandler {
-            DispatchQueue.main.async {
-                self.showNoResultsAlert()
+            DispatchQueue.main.async { [weak self] in
+                self?.showNoResultsAlert()
             }
         }
     }
     
+    //MARK: - No result Alert
     func showNoResultsAlert() {
         let alertController = UIAlertController(title: "No Results Found", message: nil, preferredStyle: .alert)
         
@@ -102,6 +104,7 @@ final class SearchViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
+    //MARK: - Search Pressed Function
     @IBAction func searchPressed(_ sender: Any) {
         viewModel.executeSearch()
     }

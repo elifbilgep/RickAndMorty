@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CharacterDetailViewController : UIViewController {
+final class CharacterDetailViewController : UIViewController, BaseViewControllerProtocol {
     
     @IBOutlet private weak var collectionView: UICollectionView!
         
@@ -35,7 +35,6 @@ final class CharacterDetailViewController : UIViewController {
     }
     
     private func configureUI(){
-        
         configureCollectionView()
         initializeCollectionView()
         configureSpinner()
@@ -43,7 +42,7 @@ final class CharacterDetailViewController : UIViewController {
     }
     
     private func configureTabBar(){
-        title = viewModel.title
+        setNavbar(title: viewModel.title)
     }
 
     private func configureSpinner(){
@@ -117,6 +116,6 @@ extension CharacterDetailViewController : UICollectionViewDataSource, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         
-        return UIEdgeInsets(top: 0, left: MarginConstant.inset, bottom: 0, right: MarginConstant.inset)
+        return UIEdgeInsets(top: .zero, left: MarginConstant.insetMeduim, bottom: .zero, right: MarginConstant.insetMeduim)
     }
 }

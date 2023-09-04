@@ -61,7 +61,7 @@ extension SeasonSectionCell : UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: MarginConstant.inset, left: MarginConstant.inset, bottom: 0, right: MarginConstant.negativeInset)
+        return UIEdgeInsets(top: .zero, left: MarginConstant.insetMeduim, bottom: .zero, right: MarginConstant.insetMeduim)
     }
     
 }
