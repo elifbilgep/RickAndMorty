@@ -102,11 +102,10 @@ final class CharacterListViewViewModel : NSObject{
         return apiInfo?.next != nil
     }
     
-    func setCollectionCellSize(collectionView : UICollectionView, isHeight : Bool) -> Double {
+    func setCollectionCellSize(collectionView : UICollectionView, isHeight : Bool) -> CGFloat {
         
         let bounds = collectionView.bounds
         let width: CGFloat
-        let screenWidth = UIScreen.main.bounds.width
         
         width = (bounds.width - 30) / 2.2
         if isHeight{

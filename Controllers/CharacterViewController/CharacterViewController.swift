@@ -55,6 +55,17 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     func configureNavBar(){
         title = TextConstant.appName
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        configureSearch()
+    }
+    
+    func configureSearch(){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
+    }
+    
+    @objc private func didTapSearch(){
+        let vc = SearchViewController(config: SearchViewController.Config(type: .character))
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func configureSpinner(){
