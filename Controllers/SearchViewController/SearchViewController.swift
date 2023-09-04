@@ -7,20 +7,10 @@
 
 import UIKit
 
-protocol SearchViewControllerDelegate : AnyObject {
-    //Navigate to character detail page
-    func searchResultController(_ resultsView: SearchViewController, didTapCharacter index: Int)
-}
-
-
 final class SearchViewController: UIViewController {
     //MARK: - Outlets
     @IBOutlet weak var searchBarView: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
-    
-    
-    //MARK: - Delegate
-    weak var viewControllerDelegate : SearchViewControllerDelegate?
     
     
     //MARK: - Properties
