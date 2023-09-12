@@ -7,13 +7,9 @@
 
 import UIKit
 
-final class CharacterViewController: UIViewController,CharacterListViewViewModelDelegate, BaseViewControllerProtocol {
+final class CharacterViewController: UIViewController, BaseViewControllerProtocol {
     
-    private enum Sections : String{
-        case Seasons, Characters
-    }
-    
-    private enum CellSize{
+    private enum CellSize {
         static let headerHeight : Double = 30
         static let characterCellHeight : Double = 150
     }
@@ -21,21 +17,32 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var viewModel: CharacterListViewViewModel!
+    private let viewModel: CharacterListViewViewModel
     
     private lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
         spinner.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(spinner)
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         return spinner
     }()
+    
+    init(viewModel : CharacterListViewViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         
-        viewModel = CharacterListViewViewModel()
         viewModel.delegate = self
         viewModel.fetchCharacters()
         
@@ -44,8 +51,6 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
     func configureUI(){
         configureNavBar()
         configureCollectionView()
-        view.addSubview(spinner)
-        view.addSubview(collectionView)
         configureSpinner()
     }
     
@@ -59,15 +64,8 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
     }
     
-    @objc private func didTapSearch(){
-        let vc = SearchViewController(config: Config(type: .character))
-        vc.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func configureSpinner(){
-        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
         spinner.startAnimating()
     }
     
@@ -87,20 +85,29 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
         collectionView.delegate = self
     }
     
+    @objc private func didTapSearch(){
+        let vc = SearchViewController(config: Config(type: .character))
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+//MARK: - CharacterListViewViewModelDelegate
+extension CharacterViewController : CharacterListViewViewModelDelegate{
     func didLoadInitialCharacters() {
         spinner.stopAnimating()
         collectionView.reloadData() // Initial fetch
         UIView.animate(withDuration: 0.4) {
             self.collectionView.alpha = 1
         }
-        
     }
     
     func didLoadMoreCharacters(with newIndexPaths: [IndexPath]) {
-        let sectionNumber = 1 
+        //to view model
+        let sectionNumber = 1
         let newIndexPathsInSection = newIndexPaths.map { indexPath in
             return IndexPath(row: indexPath.row, section: sectionNumber)
         }
+        //dispatch
         collectionView.insertItems(at: newIndexPathsInSection)
     }
     
@@ -115,20 +122,23 @@ final class CharacterViewController: UIViewController,CharacterListViewViewModel
 extension CharacterViewController : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return CharacterListCaseEnum.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
+        let type = CharacterListCaseEnum(rawValue: section)
+        switch type {
+        case .seasons:
             return 1
-        } else {
-            return  viewModel.cellViewModels.count
+        case .characters:
+            return viewModel.cellViewModels.count
+        default:
+            return 0
         }
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         let character = viewModel.characters[indexPath.row]
         didSelectCharacter(character)
     }
@@ -175,12 +185,10 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
         
         if kind == UICollectionView.elementKindSectionHeader {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderCollectionViewCell.cellIdentifier, for: indexPath as IndexPath) as! SectionHeaderCollectionViewCell
-            
-            if indexPath.section == 0{
-                headerView.configure(title: Sections.Seasons.rawValue)
-            }else{
-                headerView.configure(title:  Sections.Characters.rawValue)
+            guard let type = CharacterListCaseEnum(rawValue: indexPath.section) else {
+                return UICollectionReusableView()
             }
+            headerView.configure(title: type.sectionTitle)
             return headerView
         }
         return UICollectionReusableView()

@@ -9,8 +9,8 @@ import UIKit
 
 final class SearchViewController: UIViewController, BaseViewControllerProtocol {
     //MARK: - Outlets
-    @IBOutlet weak var searchBarView: UISearchBar!
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet private weak var searchBarView: UISearchBar!
+    @IBOutlet private weak var collectionView: UICollectionView!
     
     
     //MARK: - Properties
@@ -58,15 +58,6 @@ final class SearchViewController: UIViewController, BaseViewControllerProtocol {
     @IBAction private func searchPressed(_ sender: Any) {
         executeSearch()
     }
-
-    
-    func configureCollectionView(){
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
-        collectionView.register(UINib(nibName: Nibs.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
-        collectionView.reloadData()
-    }
     
 }
 
@@ -104,6 +95,14 @@ extension SearchViewController : SearchViewControllerProtocol{
                 self?.showNoResultsAlert()
             }
         }
+    }
+    
+    func configureCollectionView(){
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.register(UINib(nibName: Nibs.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
+        collectionView.reloadData()
     }
     
     func noResultSearch() {

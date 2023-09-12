@@ -12,8 +12,9 @@ protocol SearchViewControllerProtocol {
     func noResultSearch()
     func processViewModel()
     func configureHandlers(viewModel : SearchViewViewModel)
-    
-    init(config : Config)
+    func configureCollectionView()
+
+    init(config: Config)
 }
 
 protocol SearchViewModelProtocol {

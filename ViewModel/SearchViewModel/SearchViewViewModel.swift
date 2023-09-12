@@ -31,7 +31,7 @@ final class SearchViewViewModel : SearchViewModelProtocol {
     func registerNoResultHandler(_ block: @escaping ()-> Void){
         self.noResultsHandler = block
     }
-    
+    //MARK: - Create request
     func executeSearch() {
         guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else{
             return
@@ -59,7 +59,7 @@ final class SearchViewViewModel : SearchViewModelProtocol {
             //later
         }
     }
-    
+    //MARK: - API Call
     func makeSearchAPICall<T : Codable>(_ type: T.Type, request: Request){
         Service.shared.execute(request, expecting: type) { [weak self] result in
             switch result {
@@ -72,6 +72,7 @@ final class SearchViewViewModel : SearchViewModelProtocol {
         }
     }
     
+    //MARK: - Parse Data
     func parseSearchResults(model : Codable){
         var resultsVM : SearchResultType?
         var nextURL : String?
@@ -100,7 +101,7 @@ final class SearchViewViewModel : SearchViewModelProtocol {
         self.searchText = text
     }
     
-    //did tap
+    //MARK: - Did Tap character
     func characterSeachResult(at index: Int)-> CharacterModel?{
         guard let searchModel = searchResultModel as? GetAllCharactersResponse else{
             return nil

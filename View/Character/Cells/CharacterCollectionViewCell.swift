@@ -48,6 +48,7 @@ final class CharacterColletionViewCell : UICollectionViewCell, BaseCollectionVie
         characterNameView.text = nil
     }
     
+    //MARK: - Configure
     func configure(with viewModel: Any?) {
         if let viewModel = viewModel as? CharacterCollectionViewCellViewModel {
             characterNameView.text = viewModel.characterName

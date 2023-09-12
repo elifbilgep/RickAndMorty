@@ -13,6 +13,20 @@ protocol CharacterListViewViewModelDelegate : AnyObject{
     func didSelectCharacter(_ character: CharacterModel)
 }
 
+enum CharacterListCaseEnum: Int, CaseIterable {
+    case seasons = 0
+    case characters
+    
+    var sectionTitle: String {
+        switch self {
+        case .seasons:
+            return "Seasons"
+        case .characters:
+            return "Characters"
+        }
+    }
+}
+
 final class CharacterListViewViewModel : NSObject{
     
     weak var delegate: CharacterListViewViewModelDelegate?
@@ -23,14 +37,12 @@ final class CharacterListViewViewModel : NSObject{
     //bunu better la
     var characters : [CharacterModel] = [] {
         didSet{
-            for character in characters{
+            for character in characters {
                 let viewModel = CharacterCollectionViewCellViewModel(characterName: character.name, characterStatus: character.status, characterImageUrl: URL(string: character.image))
                 if !cellViewModels.contains(viewModel) {
                     cellViewModels.append(viewModel)
                 }
-                
             }
-            
         }
     }
     
@@ -38,7 +50,7 @@ final class CharacterListViewViewModel : NSObject{
     
     
     //Fetch initial set of characters (20)
-    func fetchCharacters(){
+    func fetchCharacters() {
         Service.shared.execute(.listCharactersRequests, expecting: GetAllCharactersResponse.self) { [weak self] result in
             switch result{
             case .success(let responseModel):
@@ -57,18 +69,18 @@ final class CharacterListViewViewModel : NSObject{
     }
     
     // Paginate if additional characters are needed
-    func fetchAdditionalCharacters(url : URL){
-        guard !isLoadingMoreCharacters else{
+    func fetchAdditionalCharacters(url : URL) {
+        guard !isLoadingMoreCharacters else {
             return
         }
         isLoadingMoreCharacters = true
-        guard let request = Request(url: url) else{
+        guard let request = Request(url: url) else {
             isLoadingMoreCharacters = false
             return
         }
         
         Service.shared.execute(request, expecting: GetAllCharactersResponse.self) { [weak self] result in
-            guard let self else{
+            guard let self else {
                 return
             }
             
@@ -86,7 +98,7 @@ final class CharacterListViewViewModel : NSObject{
                     return IndexPath(row: $0, section: 0)
                 })
                 self.characters.append(contentsOf: moreResults)
-                DispatchQueue.main.async {
+                DispatchQueue.main.async {// view controller da dispatchQueue
                     self.delegate?.didLoadMoreCharacters(with: indexPathsToAdd)
                     self.isLoadingMoreCharacters = false
                 }

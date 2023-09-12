@@ -73,8 +73,7 @@ extension CharacterDetailViewController : UICollectionViewDataSource, UICollecti
         case .photo:
             return 1
         case .information(let viewModels):
-            return viewModels.count
-        }
+            return viewModels.count        }
     }
     
     //MARK: - number of sections
