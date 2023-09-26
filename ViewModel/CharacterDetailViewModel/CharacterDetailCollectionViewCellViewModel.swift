@@ -7,9 +7,10 @@
 
 import UIKit
 
-final class CharacterInfoCollectionViewCellViewModel{
-    //enum yukarı
-    //herşey private
+final class CharacterInfoCollectionViewCellViewModel {
+    // TODO:
+    // enum yukarı
+    // herşey private
     
     private let type: `Type`
     private let value: String
@@ -19,11 +20,11 @@ final class CharacterInfoCollectionViewCellViewModel{
         self.value = value
     }
     
-    var title : String{
+    var title: String {
         return type.displayTitle
     }
     
-    var tintColor : UIColor{
+    var tintColor: UIColor {
         return type.tintColor
     }
     
@@ -41,18 +42,18 @@ final class CharacterInfoCollectionViewCellViewModel{
         return formatter
     }()
     
-    var displayValue : String{
-        if value.isEmpty{
+    var displayValue: String {
+        if value.isEmpty {
             return "None"
         }
         if let date = Self.dateFormatter.date(from: value),
-           type == .created{
+           type == .created {
             return Self.shortDateFormatter.string(from: date)
         }
         return value
     }
     
-    enum `Type` : String{
+    enum `Type`: String {
         case status
         case gender
         case type

@@ -7,35 +7,30 @@
 
 import UIKit
 
-
 enum SectionType {
     case photo(viewModel: CharacterPhotoCollectionViewModel)
     case information(viewModels: [CharacterInfoCollectionViewCellViewModel])
 }
 
-final class CharacterDetailViewModel{
-   
-    
+final class CharacterDetailViewModel {
+
     var sections: [SectionType] = []
-    private let character : CharacterModel
-    
- 
-    private var requestURL : URL? {
+    private let character: CharacterModel
+    private var requestURL: URL? {
         return URL(string: character.url)
     }
     
-    var title : String {
+    var title: String {
         return character.name.uppercased()
     }
-    
 
-    //MARK: - init
+    // MARK: - init
     init(character: CharacterModel) {
         self.character = character
         setupSections()
     }
     
-    private func setupSections(){
+    private func setupSections() {
         sections = [
             .photo(viewModel: .init(imageURL: URL(string: character.image))),
             .information(viewModels: [
@@ -52,6 +47,5 @@ final class CharacterDetailViewModel{
         ]
         
     }
-    
-   
+
 }

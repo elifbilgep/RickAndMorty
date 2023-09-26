@@ -10,10 +10,10 @@ import UIKit
 final class CharacterViewController: UIViewController, BaseViewControllerProtocol {
     
     private enum CellSize {
-        static let headerHeight : Double = 30
-        static let characterCellHeight : Double = 150
+        static let headerHeight: Double = 30
+        static let characterCellHeight: Double = 150
     }
-    //MARK: - Properties
+    // MARK: - Properties
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -29,7 +29,7 @@ final class CharacterViewController: UIViewController, BaseViewControllerProtoco
         return spinner
     }()
     
-    init(viewModel : CharacterListViewViewModel) {
+    init(viewModel: CharacterListViewViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -38,7 +38,7 @@ final class CharacterViewController: UIViewController, BaseViewControllerProtoco
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - Lifecycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
@@ -48,28 +48,28 @@ final class CharacterViewController: UIViewController, BaseViewControllerProtoco
         
     }
     
-    func configureUI(){
+    func configureUI() {
         configureNavBar()
         configureCollectionView()
         configureSpinner()
     }
     
-    func configureNavBar(){
+    func configureNavBar() {
         setNavbar(title: TextConstant.appName)
         self.navigationController?.navigationBar.prefersLargeTitles = true
         configureSearch()
     }
     
-    func configureSearch(){
+    func configureSearch() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
     }
     
-    func configureSpinner(){
+    func configureSpinner() {
         
         spinner.startAnimating()
     }
     
-    func configureCollectionView(){
+    func configureCollectionView() {
         collectionView.frame = self.view.bounds
         
         collectionView.register(UINib(nibName: Nibs.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
@@ -79,20 +79,19 @@ final class CharacterViewController: UIViewController, BaseViewControllerProtoco
         collectionView.register(FooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterLoadingCollectionReusableView.identifier)
         
         collectionView.register(UINib(nibName: Nibs.sectionHeaderCell, bundle: Bundle(for: SectionHeaderCollectionViewCell.self)), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionViewCell.cellIdentifier)
-        
-        
+
         collectionView.dataSource = self
         collectionView.delegate = self
     }
     
-    @objc private func didTapSearch(){
-        let vc = SearchViewController(config: Config(type: .character))
-        vc.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(vc, animated: true)
+    @objc private func didTapSearch() {
+        let viewController = SearchViewController(config: Config(type: .character))
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
-//MARK: - CharacterListViewViewModelDelegate
-extension CharacterViewController : CharacterListViewViewModelDelegate{
+// MARK: - CharacterListViewViewModelDelegate
+extension CharacterViewController: CharacterListViewViewModelDelegate {
     func didLoadInitialCharacters() {
         spinner.stopAnimating()
         collectionView.reloadData() // Initial fetch
@@ -100,14 +99,15 @@ extension CharacterViewController : CharacterListViewViewModelDelegate{
             self.collectionView.alpha = 1
         }
     }
-    
+
+    // TODO:
     func didLoadMoreCharacters(with newIndexPaths: [IndexPath]) {
-        //to view model
+        // to view model
         let sectionNumber = 1
         let newIndexPathsInSection = newIndexPaths.map { indexPath in
             return IndexPath(row: indexPath.row, section: sectionNumber)
         }
-        //dispatch
+        // viewControllerdispatch
         collectionView.insertItems(at: newIndexPathsInSection)
     }
     
@@ -118,8 +118,8 @@ extension CharacterViewController : CharacterListViewViewModelDelegate{
     }
 }
 
-//MARK: - CollectionView
-extension CharacterViewController : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+// MARK: - CollectionView
+extension CharacterViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return CharacterListCaseEnum.allCases.count
@@ -136,38 +136,38 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
             return 0
         }
     }
-    
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let character = viewModel.characters[indexPath.row]
         didSelectCharacter(character)
     }
     
-    //MARK: - size for item at
+    // MARK: - size for item at
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        
+
         if indexPath.section == 0 {
-            return CGSize(width: UIScreen.screenWidth,height: CellSize.characterCellHeight)
-        }else{
-            return CGSize(//Viewmodel a taşı
+            return CGSize(width: UIScreen.screenWidth, height: CellSize.characterCellHeight)
+        } else {
+            return CGSize(
+                // TODO:
+                // Viewmodel a taşı
                 width: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: false),
                 height: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: true)
             )
         }
     }
     
-    //MARK: - Inset for section at
+    // MARK: - Inset for section at
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
 
         if section == 0 {
             return UIEdgeInsets(top: .zero, left: MarginConstant.insetSmall, bottom: MarginConstant.insetSmall, right: MarginConstant.insetSmall)
         }
         
-        return UIEdgeInsets(top: 10 , left: 10, bottom: 10, right: 10)
+        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
     
-    //MARK: - Cell for item at
+    // MARK: - Cell for item at
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SeasonSectionCell.cellIdentifier, for: indexPath) as! SeasonSectionCell
@@ -179,10 +179,9 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
         }
     }
     
-    //MARK: - viewForSupplementaryElementOfKind
+    // MARK: - viewForSupplementaryElementOfKind
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        
+
         if kind == UICollectionView.elementKindSectionHeader {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderCollectionViewCell.cellIdentifier, for: indexPath as IndexPath) as! SectionHeaderCollectionViewCell
             guard let type = CharacterListCaseEnum(rawValue: indexPath.section) else {
@@ -198,7 +197,7 @@ extension CharacterViewController : UICollectionViewDataSource, UICollectionView
         
         return CGSize(width: collectionView.frame.width, height: CellSize.headerHeight)
     }
-    //MARK: - Scroll
+    // MARK: - Scroll
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
            let offset = scrollView.contentOffset.y
            let totalContentHeight = scrollView.contentSize.height

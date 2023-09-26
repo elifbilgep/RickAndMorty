@@ -8,12 +8,10 @@
 import Foundation
 import UIKit
 
-protocol BaseCollectionViewCellProtocol : AnyObject {
+protocol BaseCollectionViewCellProtocol: AnyObject {
     
     static var cellIdentifier: String { get }
     
-    func configure(with viewModel : Any?)
+    func configure(with viewModel: Any?)
     
 }
-
-

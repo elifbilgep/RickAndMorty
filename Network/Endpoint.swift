@@ -7,11 +7,11 @@
 
 import Foundation
 
-@frozen enum Endpoint: String, CaseIterable, Hashable{
-    //endpoint to get character info
+@frozen enum Endpoint: String, CaseIterable, Hashable {
+    // endpoint to get character info
     case character
-    //endpoint to get location info
+    // endpoint to get location info
     case location
-    //endpoint to get epsode info
+    // endpoint to get epsode info
     case episode
 }

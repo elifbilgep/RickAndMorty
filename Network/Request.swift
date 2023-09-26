@@ -7,34 +7,34 @@
 
 import Foundation
 
-final class Request{
+final class Request {
     
-    //API constants
+    // API constants
     private struct Constants {
         static let baseURL = "https://rickandmortyapi.com/api"
     }
     
     // desired endpoint
-    let endpoint : Endpoint
+    let endpoint: Endpoint
     
-    //Path components for PI, if any
-    private let pathComponents : [String]
+    // Path components for PI, if any
+    private let pathComponents: [String]
     
-    //Query arguments for API, if any
-    private let queryParameters : [URLQueryItem]
+    // Query arguments for API, if any
+    private let queryParameters: [URLQueryItem]
     
-    private var urlString: String{
+    private var urlString: String {
         var string = Constants.baseURL
         string += "/"
         string += endpoint.rawValue
         
-        if !pathComponents.isEmpty{
+        if !pathComponents.isEmpty {
             pathComponents.forEach {
                 string += "/\($0)"
             }
         }
         
-        if !queryParameters.isEmpty{
+        if !queryParameters.isEmpty {
             string += "?"
             let argumentString = queryParameters.compactMap({
                 guard let value = $0.value else {return nil}
@@ -45,15 +45,15 @@ final class Request{
         return string
     }
     
-    //Computed + constructed API url
-    var url : URL?{
+    // Computed + constructed API url
+    var url: URL? {
         return URL(string: urlString)
     }
     
-    //Desired http method
+    // Desired http method
     let httpMethod = "GET"
    
-    ///Construct request
+    /// Construct request
     /// Parameters:
     ///     - Endpoint : Target endpoint
     ///     pathComponents: Collection of path components
@@ -68,7 +68,7 @@ final class Request{
         self.queryParameters = queryParameters
     }
     
-    ///Attempt to create request
+    /// Attempt to create request
     /// - Parameter url: URL to parse
     convenience init?(url: URL) {
         let string = url.absoluteString
@@ -121,9 +121,9 @@ final class Request{
     }
 }
 
-//MARK: - Request convenience
+// MARK: - Request convenience
 
-extension Request{
+extension Request {
     static let listCharactersRequests = Request(endpoint: .character)
     static let listEpisodeRequest = Request(endpoint: .episode)
     static let listLocationsRequest = Request(endpoint: .location)

@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol CharacterListViewViewModelDelegate : AnyObject{
+protocol CharacterListViewViewModelDelegate: AnyObject {
     func didLoadInitialCharacters()
     func didLoadMoreCharacters(with newIndexPaths: [IndexPath])
     func didSelectCharacter(_ character: CharacterModel)
@@ -27,16 +27,16 @@ enum CharacterListCaseEnum: Int, CaseIterable {
     }
 }
 
-final class CharacterListViewViewModel : NSObject{
+final class CharacterListViewViewModel: NSObject {
     
     weak var delegate: CharacterListViewViewModelDelegate?
     
     var isLoadingMoreCharacters = false
-    var apiInfo : GetAllCharactersResponse.Info? = nil
+    var apiInfo: GetAllCharactersResponse.Info?
     
-    //bunu better la
-    var characters : [CharacterModel] = [] {
-        didSet{
+    // bunu better la
+    var characters: [CharacterModel] = [] {
+        didSet {
             for character in characters {
                 let viewModel = CharacterCollectionViewCellViewModel(characterName: character.name, characterStatus: character.status, characterImageUrl: URL(string: character.image))
                 if !cellViewModels.contains(viewModel) {
@@ -46,13 +46,12 @@ final class CharacterListViewViewModel : NSObject{
         }
     }
     
-    var cellViewModels : [CharacterCollectionViewCellViewModel] = []
-    
-    
-    //Fetch initial set of characters (20)
+    var cellViewModels: [CharacterCollectionViewCellViewModel] = []
+
+    // Fetch initial set of characters (20)
     func fetchCharacters() {
         Service.shared.execute(.listCharactersRequests, expecting: GetAllCharactersResponse.self) { [weak self] result in
-            switch result{
+            switch result {
             case .success(let responseModel):
                 let results = responseModel.results
                 let info = responseModel.info
@@ -69,7 +68,7 @@ final class CharacterListViewViewModel : NSObject{
     }
     
     // Paginate if additional characters are needed
-    func fetchAdditionalCharacters(url : URL) {
+    func fetchAdditionalCharacters(url: URL) {
         guard !isLoadingMoreCharacters else {
             return
         }
@@ -94,7 +93,7 @@ final class CharacterListViewViewModel : NSObject{
                 let newCount = moreResults.count
                 let total = originalCount + newCount
                 let startingIndex = total - newCount
-                let indexPathsToAdd : [IndexPath] = Array(startingIndex..<(startingIndex + newCount)).compactMap({
+                let indexPathsToAdd: [IndexPath] = Array(startingIndex..<(startingIndex + newCount)).compactMap({
                     return IndexPath(row: $0, section: 0)
                 })
                 self.characters.append(contentsOf: moreResults)
@@ -114,19 +113,16 @@ final class CharacterListViewViewModel : NSObject{
         return apiInfo?.next != nil
     }
     
-    func setCollectionCellSize(collectionView : UICollectionView, isHeight : Bool) -> CGFloat {
+    func setCollectionCellSize(collectionView: UICollectionView, isHeight: Bool) -> CGFloat {
         
         let bounds = collectionView.bounds
         let width: CGFloat
         
         width = (bounds.width - 30) / 2.1
-        if isHeight{
+        if isHeight {
             return width * 1.5
-        }else{
+        } else {
             return width
         }
-        
-       
     }
 }
-

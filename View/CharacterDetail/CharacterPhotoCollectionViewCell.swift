@@ -26,7 +26,7 @@ class CharacterPhotoCollectionViewCell: UICollectionViewCell, BaseCollectionView
     }
     
     func configure(with viewModel: Any?) {
-        if let viewModel = viewModel as? CharacterPhotoCollectionViewModel{
+        if let viewModel = viewModel as? CharacterPhotoCollectionViewModel {
             viewModel.fetchImage { [weak self] result in
                 switch result {
                 case .success(let data):
