@@ -11,7 +11,6 @@ class SectionHeaderCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var bgView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     
-    
     static let cellIdentifier = "SectionHeaderCollectionViewCell"
     
     override func awakeFromNib() {
@@ -19,7 +18,7 @@ class SectionHeaderCollectionViewCell: UICollectionViewCell {
         
     }
 
-    func configure(title: String){
+    func configure(title: String) {
         titleLabel.text = title
     }
 

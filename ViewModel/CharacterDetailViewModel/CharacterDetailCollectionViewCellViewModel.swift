@@ -7,9 +7,7 @@
 
 import UIKit
 
-final class CharacterInfoCollectionViewCellViewModel{
-    //enum yukarı
-    //herşey private
+final class CharacterInfoCollectionViewCellViewModel {
     
     private let type: `Type`
     private let value: String
@@ -18,41 +16,8 @@ final class CharacterInfoCollectionViewCellViewModel{
         self.type = type
         self.value = value
     }
-    
-    var title : String{
-        return type.displayTitle
-    }
-    
-    var tintColor : UIColor{
-        return type.tintColor
-    }
-    
-    static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSZ"
-        return formatter
-    }()
-    
-    static let shortDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        formatter.timeZone = .current
-        return formatter
-    }()
-    
-    var displayValue : String{
-        if value.isEmpty{
-            return "None"
-        }
-        if let date = Self.dateFormatter.date(from: value),
-           type == .created{
-            return Self.shortDateFormatter.string(from: date)
-        }
-        return value
-    }
-    
-    enum `Type` : String{
+
+    enum `Type`: String {
         case status
         case gender
         case type
@@ -61,7 +26,7 @@ final class CharacterInfoCollectionViewCellViewModel{
         case created
         case location
         case episodeCount
-        
+
         var tintColor: UIColor {
             switch self {
             case .status:
@@ -96,6 +61,38 @@ final class CharacterInfoCollectionViewCellViewModel{
                 return "EPISODE COUNT"
             }
         }
-       
+    }
+
+    var title: String {
+        return type.displayTitle
+    }
+    
+    var tintColor: UIColor {
+        return type.tintColor
+    }
+    
+    static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSZ"
+        return formatter
+    }()
+    
+    static let shortDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.timeZone = .current
+        return formatter
+    }()
+    
+    var displayValue: String {
+        if value.isEmpty {
+            return "None"
+        }
+        if let date = Self.dateFormatter.date(from: value),
+           type == .created {
+            return Self.shortDateFormatter.string(from: date)
+        }
+        return value
     }
 }

@@ -9,14 +9,14 @@ import Foundation
 
 final class CharacterPhotoCollectionViewModel {
     
-    private let imageURL : URL?
+    private let imageURL: URL?
     
     init(imageURL: URL?) {
         self.imageURL = imageURL
     }
     
-    func fetchImage(completion: @escaping (Result<Data,Error>) -> Void){
-        guard let imageUrl = imageURL else{
+    func fetchImage(completion: @escaping (Result<Data, Error>) -> Void) {
+        guard let imageUrl = imageURL else {
             completion(.failure(URLError(.badURL)))
             return
         }
@@ -24,5 +24,3 @@ final class CharacterPhotoCollectionViewModel {
         ImageLoader.shared.downloadImage(imageUrl, completion: completion)
     }
 }
-
-

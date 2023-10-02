@@ -7,33 +7,35 @@
 
 import UIKit
 
-class CharacterPhotoCollectionViewCell: UICollectionViewCell {
+class CharacterPhotoCollectionViewCell: UICollectionViewCell, BaseCollectionViewCellProtocol {
+    
     @IBOutlet private weak var characterImageView: UIImageView!
     
-    static let cellIdentifer = "CharacterPhotoCollectionViewCell"
-    
+    static let cellIdentifier = "CharacterPhotoCollectionViewCell"
     
     override func awakeFromNib() {
         super.awakeFromNib()
         characterImageView.contentMode = .scaleAspectFill
         characterImageView.layer.cornerRadius = 20
-
+        
     }
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         characterImageView.image = nil
     }
     
-     func configure(with viewModel: CharacterPhotoCollectionViewModel) {
-        viewModel.fetchImage { [weak self] result in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    self?.characterImageView.image = UIImage(data: data)
+    func configure(with viewModel: Any?) {
+        if let viewModel = viewModel as? CharacterPhotoCollectionViewModel {
+            viewModel.fetchImage { [weak self] result in
+                switch result {
+                case .success(let data):
+                    DispatchQueue.main.async {
+                        self?.characterImageView.image = UIImage(data: data)
+                    }
+                case .failure:
+                    break
                 }
-            case .failure:
-                break
             }
         }
     }

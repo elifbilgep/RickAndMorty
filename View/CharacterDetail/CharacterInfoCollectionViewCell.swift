@@ -7,10 +7,9 @@
 
 import UIKit
 
-class CharacterInfoCollectionViewCell: UICollectionViewCell {
-
+class CharacterInfoCollectionViewCell: UICollectionViewCell, BaseCollectionViewCellProtocol {
+  
     static let cellIdentifier = "CharacterInfoCollectionViewCell"
-    
 
     @IBOutlet weak var valueTitle: UILabel!
     
@@ -22,16 +21,18 @@ class CharacterInfoCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         titleView.backgroundColor = .secondarySystemBackground
     }
-    
 
     override func prepareForReuse() {
         title.text = nil
         valueTitle.text = nil
     }
     
-    func configure(with viewModel: CharacterInfoCollectionViewCellViewModel){
-        valueTitle.text = viewModel.displayValue
-        title.text = viewModel.title
-        title.textColor = viewModel.tintColor
+    func configure(with viewModel: Any?) {
+        if let viewModel = viewModel as? CharacterInfoCollectionViewCellViewModel {
+            valueTitle.text = viewModel.displayValue
+            title.text = viewModel.title
+            title.textColor = viewModel.tintColor
+        }
     }
+
 }

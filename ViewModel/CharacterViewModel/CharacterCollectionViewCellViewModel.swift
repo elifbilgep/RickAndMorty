@@ -7,27 +7,27 @@
 
 import Foundation
 
-final class CharacterCollectionViewCellViewModel : Hashable, Equatable {
+final class CharacterCollectionViewCellViewModel: Hashable, Equatable {
     
-    public let characterName : String
-    private let characterStatus : CharacterStatusModel
-    private let characterImageUrl : URL?
+    let characterName: String
+    private let characterStatus: CharacterStatusModel
+    private let characterImageUrl: URL?
     
-    //MARK: - init
-    init(characterName : String,
-         characterStatus : CharacterStatusModel,
-         characterImageUrl : URL?
-    ){
+    // MARK: - init
+    init(characterName: String,
+         characterStatus: CharacterStatusModel,
+         characterImageUrl: URL?
+    ) {
         self.characterName = characterName
         self.characterStatus = characterStatus
         self.characterImageUrl = characterImageUrl
     }
     
-    public var characterStatusText : String{
+    var characterStatusText: String {
         return "Status: \(characterStatus.text)"
     }
     
-    public func fetchImage(completion: @escaping (Result<Data,Error>)-> Void){
+    func fetchImage(completion: @escaping (Result<Data, Error>) -> Void) {
         guard let url = characterImageUrl else {
             completion(.failure(URLError(.badURL)))
             return
@@ -35,12 +35,12 @@ final class CharacterCollectionViewCellViewModel : Hashable, Equatable {
         ImageLoader.shared.downloadImage(url, completion: completion)
     }
     
-    //MARK: - Hashable
+    // MARK: - Hashable
     static func == (lhs: CharacterCollectionViewCellViewModel, rhs: CharacterCollectionViewCellViewModel) -> Bool {
         return lhs.hashValue == rhs.hashValue
     }
 
-    func hash(into hasher: inout Hasher){
+    func hash(into hasher: inout Hasher) {
         hasher.combine(characterName)
         hasher.combine(characterStatus)
         hasher.combine(characterImageUrl)

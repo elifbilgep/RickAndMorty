@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SingleLocationModel : Codable{
-    let name : String
-    let url : String
+struct SingleLocationModel: Codable {
+    let name: String
+    let url: String
 }

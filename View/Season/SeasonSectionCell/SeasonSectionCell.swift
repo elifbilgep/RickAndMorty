@@ -12,10 +12,10 @@ class SeasonSectionCell: UICollectionViewCell {
     @IBOutlet private weak var collectionView: UICollectionView!
     static let cellIdentifier = "SeasonSectionCell"
     
-    private var viewModel : SeasonSectionViewModel!
+    private var viewModel: SeasonSectionViewModel!
     
     private enum CellSize {
-        static let cellHeight : Double = 200
+        static let cellHeight: Double = 200
     }
     
     override func awakeFromNib() {
@@ -24,23 +24,21 @@ class SeasonSectionCell: UICollectionViewCell {
         configureUI()
     }
     
-    private func configureUI(){
+    private func configureUI() {
         configureCollectionView()
     }
     
-    private func configureCollectionView(){
+    private func configureCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
-    
-        
+
         collectionView.register(UINib(nibName: "SeasonCell", bundle: Bundle(for: SeasonCell.self)), forCellWithReuseIdentifier: SeasonCell.cellIdentifier)
     }
     
 }
 
-
-extension SeasonSectionCell : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+extension SeasonSectionCell: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return SeasonSectionViewModel.seasonsImageNames.count
@@ -54,14 +52,14 @@ extension SeasonSectionCell : UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let screenWidth = UIScreen.main.bounds.width
+        let screenWidth = UIScreen.screenWidth
         let cellWidth = screenWidth / 3.5
         
         return CGSize(width: cellWidth, height: CellSize.cellHeight ) // You can adjust the height as needed
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: MarginConstant.inset, left: MarginConstant.inset, bottom: 0, right: MarginConstant.negativeInset)
+        return UIEdgeInsets(top: .zero, left: MarginConstant.insetMeduim, bottom: .zero, right: MarginConstant.insetMeduim)
     }
     
 }

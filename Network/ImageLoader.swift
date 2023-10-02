@@ -7,23 +7,23 @@
 
 import Foundation
 
-final class ImageLoader{
+final class ImageLoader {
     
     static let shared = ImageLoader()
     
-    //in memory data cache
+    // in memory data cache
     private var imageDataCache = NSCache<NSString, NSData>()
     
-    //Constructor
-    private init(){}
+    // Constructor
+    private init() {}
 
     /// Get image content with URl
     /// - Parameters:
     ///   - url: Source url
     ///   - completion: Callback
-    public func downloadImage(_ url: URL, completion: @escaping (Result<Data, Error>) -> Void){
+    func downloadImage(_ url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
         let key = url.absoluteString as NSString
-        if let data = imageDataCache.object(forKey: key){
+        if let data = imageDataCache.object(forKey: key) {
             completion(.success(data as Data))// NSData == Data | NSString == String
             return
             
@@ -31,7 +31,7 @@ final class ImageLoader{
         
         let request = URLRequest(url: url)
         let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
-            guard let data = data, error == nil else{
+            guard let data = data, error == nil else {
                 completion(.failure(error ?? URLError(.badServerResponse)))
                 return
             }

@@ -16,8 +16,7 @@ class SeasonCell: UICollectionViewCell {
         // Initialization code
     }
 
-    
-    func configure(image : UIImage){
+    func configure(image: UIImage) {
         seasonImageView.image = image
     }
     
