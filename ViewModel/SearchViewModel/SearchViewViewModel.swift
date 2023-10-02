@@ -19,7 +19,7 @@ final class SearchViewViewModel: SearchViewModelProtocol {
     init(config: Config) {
         self.config = config
     }
-    
+     
     // MARK: - Public
     
     // Results callback

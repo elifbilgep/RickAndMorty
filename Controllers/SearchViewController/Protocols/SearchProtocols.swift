@@ -20,7 +20,7 @@ protocol SearchViewControllerProtocol {
 protocol SearchViewModelProtocol {
     var config: Config { get }
     var searchText: String { get}
-    var searchResultHandler: ((SearchResultViewModel) -> Void)? {get}
+    var searchResultHandler: ((SearchResultViewModel) -> Void)? { get }
     var noResultsHandler: (() -> Void)? { get }
     var searchResultModel: Codable? { get }
     

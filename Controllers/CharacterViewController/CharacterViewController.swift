@@ -13,11 +13,11 @@ final class CharacterViewController: UIViewController, BaseViewControllerProtoco
         static let headerHeight: Double = 30
         static let characterCellHeight: Double = 150
     }
-    // MARK: - Properties
     
+    // MARK: - Properties
     @IBOutlet weak var collectionView: UICollectionView!
     
-    private let viewModel: CharacterListViewViewModel
+    private let viewModel: CharacterViewViewModel
     
     private lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -29,7 +29,7 @@ final class CharacterViewController: UIViewController, BaseViewControllerProtoco
         return spinner
     }()
     
-    init(viewModel: CharacterListViewViewModel) {
+    init(viewModel: CharacterViewViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -45,53 +45,11 @@ final class CharacterViewController: UIViewController, BaseViewControllerProtoco
         
         viewModel.delegate = self
         viewModel.fetchCharacters()
-        
-    }
-    
-    func configureUI() {
-        configureNavBar()
-        configureCollectionView()
-        configureSpinner()
-    }
-    
-    func configureNavBar() {
-        setNavbar(title: TextConstant.appName)
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        configureSearch()
-    }
-    
-    func configureSearch() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
-    }
-    
-    func configureSpinner() {
-        
-        spinner.startAnimating()
-    }
-    
-    func configureCollectionView() {
-        collectionView.frame = self.view.bounds
-        
-        collectionView.register(UINib(nibName: Nibs.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
-        
-        collectionView.register(UINib(nibName: Nibs.seasonCell, bundle: Bundle(for: SeasonSectionCell.self)), forCellWithReuseIdentifier: SeasonSectionCell.cellIdentifier)
-        
-        collectionView.register(FooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterLoadingCollectionReusableView.identifier)
-        
-        collectionView.register(UINib(nibName: Nibs.sectionHeaderCell, bundle: Bundle(for: SectionHeaderCollectionViewCell.self)), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionViewCell.cellIdentifier)
-
-        collectionView.dataSource = self
-        collectionView.delegate = self
-    }
-    
-    @objc private func didTapSearch() {
-        let viewController = SearchViewController(config: Config(type: .character))
-        viewController.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 // MARK: - CharacterListViewViewModelDelegate
-extension CharacterViewController: CharacterListViewViewModelDelegate {
+extension CharacterViewController: CharacterViewViewModelDelegate {
+
     func didLoadInitialCharacters() {
         spinner.stopAnimating()
         collectionView.reloadData() // Initial fetch
@@ -100,17 +58,10 @@ extension CharacterViewController: CharacterListViewViewModelDelegate {
         }
     }
 
-    // TODO:
     func didLoadMoreCharacters(with newIndexPaths: [IndexPath]) {
-        // to view model
-        let sectionNumber = 1
-        let newIndexPathsInSection = newIndexPaths.map { indexPath in
-            return IndexPath(row: indexPath.row, section: sectionNumber)
-        }
-        // viewControllerdispatch
-        collectionView.insertItems(at: newIndexPathsInSection)
+        collectionView.insertItems(at: viewModel.loadMoreCharacters(with: newIndexPaths))
     }
-    
+
     func didSelectCharacter(_ character: CharacterModel) {
         let viewModel = CharacterDetailViewModel(character: character)
         let detailVC = CharacterDetailViewController(viewModel: viewModel)
@@ -120,7 +71,7 @@ extension CharacterViewController: CharacterListViewViewModelDelegate {
 
 // MARK: - CollectionView
 extension CharacterViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return CharacterListCaseEnum.allCases.count
     }
@@ -144,16 +95,19 @@ extension CharacterViewController: UICollectionViewDataSource, UICollectionViewD
     
     // MARK: - size for item at
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let type = CharacterListCaseEnum(rawValue: indexPath.section)
 
-        if indexPath.section == 0 {
+        switch type {
+        case .seasons:
             return CGSize(width: UIScreen.screenWidth, height: CellSize.characterCellHeight)
-        } else {
+        case .characters:
             return CGSize(
-                // TODO:
-                // Viewmodel a taşı
                 width: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: false),
                 height: viewModel.setCollectionCellSize(collectionView: collectionView, isHeight: true)
             )
+        case .none:
+            return .zero
         }
     }
     
@@ -199,14 +153,60 @@ extension CharacterViewController: UICollectionViewDataSource, UICollectionViewD
     }
     // MARK: - Scroll
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
            let offset = scrollView.contentOffset.y
            let totalContentHeight = scrollView.contentSize.height
            let totalScrollViewFixedHeight = scrollView.frame.size.height
 
-           if offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
+           if offset >= (totalContentHeight - totalScrollViewFixedHeight - 220) && offset > 0 {
                if let nextURLString = viewModel.apiInfo?.next, let url = URL(string: nextURLString) {
                    viewModel.fetchAdditionalCharacters(url: url)
                }
            }
        }
+}
+
+// MARK: - CharacterViewControllerProtocol
+extension CharacterViewController: CharacterViewControllerProtocol {
+
+    func configureUI() {
+        configureNavBar()
+        configureCollectionView()
+        configureSpinner()
+    }
+
+    func configureNavBar() {
+        setNavbar(title: TextConstant.appName)
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        configureSearch()
+    }
+
+    func configureSearch() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
+    }
+
+    func configureSpinner() {
+        spinner.startAnimating()
+    }
+
+    func configureCollectionView() {
+        collectionView.frame = self.view.bounds
+
+        collectionView.register(UINib(nibName: Nibs.characterCell, bundle: Bundle(for: CharacterColletionViewCell.self)), forCellWithReuseIdentifier: CharacterColletionViewCell.cellIdentifier)
+
+        collectionView.register(UINib(nibName: Nibs.seasonCell, bundle: Bundle(for: SeasonSectionCell.self)), forCellWithReuseIdentifier: SeasonSectionCell.cellIdentifier)
+
+        collectionView.register(FooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterLoadingCollectionReusableView.identifier)
+
+        collectionView.register(UINib(nibName: Nibs.sectionHeaderCell, bundle: Bundle(for: SectionHeaderCollectionViewCell.self)), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionViewCell.cellIdentifier)
+
+        collectionView.dataSource = self
+        collectionView.delegate = self
+    }
+
+    @objc internal func didTapSearch() {
+        let viewController = SearchViewController(config: Config(type: .character))
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
+    }
 }
